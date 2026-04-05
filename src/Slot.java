@@ -27,6 +27,9 @@ public class Slot {
     }
 
     public void removeVehicle() {
+        if (isAvailable()) {
+            throw new IllegalStateException("Slot " + this.slotId + " is free already.");
+        }
         this.parkedVehicle = null;
         this.status = SlotStatus.FREE;
     }

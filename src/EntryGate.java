@@ -4,7 +4,7 @@ import models.Vehicle;
 import java.util.UUID;
 
 public class EntryGate {
-    ParkingLot parkingLot;
+    private final ParkingLot parkingLot;
 
     public EntryGate() {
         this.parkingLot = ParkingLot.getInstance();

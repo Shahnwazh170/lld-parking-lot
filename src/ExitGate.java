@@ -1,11 +1,11 @@
 public class ExitGate {
-    ParkingLot parkingLot;
+    private final ParkingLot parkingLot;
 
     public ExitGate() {
         this.parkingLot = ParkingLot.getInstance();
     }
 
-    public void processExit(Ticket ticket){
+    public void processExit(Ticket ticket) {
         parkingLot.deallocateSlot(ticket);
     }
 }

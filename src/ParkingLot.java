@@ -44,14 +44,13 @@ public class ParkingLot {
     }
 
     public void deallocateSlot(Ticket ticket) {
-        Optional<Floor> floor = floors.stream()
+        Floor floor = floors.stream()
                 .filter(i -> i.getFloorNumber() == ticket.getSlot().getFloorNumber())
-                .findFirst();
-        if (floor.isPresent()) {
-            Optional<Slot> slot = floor.get().getSlots().stream()
-                    .filter(i -> ticket.getSlot().getSlotId() == i.getSlotId()).findFirst();
-            slot.ifPresent(Slot::removeVehicle);
-        }
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid ticket: floor not found"));
+        Slot slot = floor.getSlots().stream()
+                .filter(i -> ticket.getSlot().getSlotId() == i.getSlotId())
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid ticket: slot not found"));
+        slot.removeVehicle();
     }
 
     public int getAvailableSlots() {
@@ -70,8 +69,9 @@ public class ParkingLot {
         return count;
     }
 
-    public int getAvailableSlotsForFloor(int floorNumber) {
-        return floors.get(floorNumber).countAvailableSlot();
+    public int getAvailableSlotsForFloor(int floorNumber) throws ParkingLotFullException {
+        Optional<Floor> floor = floors.stream().filter(i -> floorNumber == i.getFloorNumber()).findFirst();
+        return floor.map(Floor::countAvailableSlot).orElse(0);
     }
 
     public int getAvailableSlotsForFloor(int floorNumber, VehicleType vehicleType) {

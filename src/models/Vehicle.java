@@ -16,4 +16,12 @@ public abstract class Vehicle {
     public VehicleType getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "numberPlate='" + numberPlate + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
