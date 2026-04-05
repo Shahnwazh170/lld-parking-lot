@@ -3,6 +3,7 @@ import models.Vehicle;
 import models.VehicleType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class ParkingLot {
     }
 
     public List<Floor> getFloors() {
-        return floors;
+        return Collections.unmodifiableList(floors);
     }
 
     public Slot allocateSlot(Vehicle vehicle) throws ParkingLotFullException {
@@ -69,13 +70,14 @@ public class ParkingLot {
         return count;
     }
 
-    public int getAvailableSlotsForFloor(int floorNumber) throws ParkingLotFullException {
+    public int getAvailableSlotsForFloor(int floorNumber) {
         Optional<Floor> floor = floors.stream().filter(i -> floorNumber == i.getFloorNumber()).findFirst();
         return floor.map(Floor::countAvailableSlot).orElse(0);
     }
 
     public int getAvailableSlotsForFloor(int floorNumber, VehicleType vehicleType) {
-        return floors.get(floorNumber).countAvailableSlot(vehicleType);
+        Optional<Floor> floor = floors.stream().filter(i -> floorNumber == i.getFloorNumber()).findFirst();
+        return floor.map(i -> i.countAvailableSlot(vehicleType)).orElse(0);
     }
 }
 
