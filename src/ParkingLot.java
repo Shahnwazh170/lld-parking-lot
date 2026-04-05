@@ -33,7 +33,8 @@ public class ParkingLot {
         return Collections.unmodifiableList(floors);
     }
 
-    public Slot allocateSlot(Vehicle vehicle) throws ParkingLotFullException {
+
+    public synchronized Slot allocateSlot(Vehicle vehicle) throws ParkingLotFullException {
         for (Floor floor : floors) {
             Optional<Slot> slot = floor.findAvailableSlot(vehicle.getType());
             if (slot.isPresent()) {
@@ -44,7 +45,7 @@ public class ParkingLot {
         throw new ParkingLotFullException("No available slot for vehicle: " + vehicle.getType());
     }
 
-    public void deallocateSlot(Ticket ticket) {
+    public synchronized void deallocateSlot(Ticket ticket) {
         Floor floor = floors.stream()
                 .filter(i -> i.getFloorNumber() == ticket.getSlot().getFloorNumber())
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid ticket: floor not found"));
@@ -54,7 +55,7 @@ public class ParkingLot {
         slot.removeVehicle();
     }
 
-    public int getAvailableSlots() {
+    public synchronized int getAvailableSlots() {
         int count = 0;
         for (Floor floor : floors) {
             count += floor.countAvailableSlot();
@@ -62,7 +63,7 @@ public class ParkingLot {
         return count;
     }
 
-    public int getAvailableSlots(VehicleType vehicleType) {
+    public synchronized int getAvailableSlots(VehicleType vehicleType) {
         int count = 0;
         for (Floor floor : floors) {
             count += floor.countAvailableSlot(vehicleType);
@@ -70,12 +71,12 @@ public class ParkingLot {
         return count;
     }
 
-    public int getAvailableSlotsForFloor(int floorNumber) {
+    public synchronized int getAvailableSlotsForFloor(int floorNumber) {
         Optional<Floor> floor = floors.stream().filter(i -> floorNumber == i.getFloorNumber()).findFirst();
         return floor.map(Floor::countAvailableSlot).orElse(0);
     }
 
-    public int getAvailableSlotsForFloor(int floorNumber, VehicleType vehicleType) {
+    public synchronized int getAvailableSlotsForFloor(int floorNumber, VehicleType vehicleType) {
         Optional<Floor> floor = floors.stream().filter(i -> floorNumber == i.getFloorNumber()).findFirst();
         return floor.map(i -> i.countAvailableSlot(vehicleType)).orElse(0);
     }
