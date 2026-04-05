@@ -10,7 +10,7 @@ public class ParkingLot {
     private final List<Floor> floors;
 
     private ParkingLot() {
-        floors = new ArrayList<Floor>();
+        floors = new ArrayList<>();
         int NUMBER_OF_FLOORS = 3;
 
         for (int i = 0; i < NUMBER_OF_FLOORS; i++) {
@@ -44,10 +44,14 @@ public class ParkingLot {
     }
 
     public void deallocateSlot(Ticket ticket) {
-        Floor floor = floors.get(ticket.getSlot().getFloorNumber());
-        Optional<Slot> slot = floor.getSlots().stream()
-                .filter(i -> ticket.getSlot().getSlotId() == i.getSlotId()).findFirst();
-        slot.ifPresent(Slot::removeVehicle);
+        Optional<Floor> floor = floors.stream()
+                .filter(i -> i.getFloorNumber() == ticket.getSlot().getFloorNumber())
+                .findFirst();
+        if (floor.isPresent()) {
+            Optional<Slot> slot = floor.get().getSlots().stream()
+                    .filter(i -> ticket.getSlot().getSlotId() == i.getSlotId()).findFirst();
+            slot.ifPresent(Slot::removeVehicle);
+        }
     }
 
     public int getAvailableSlots() {

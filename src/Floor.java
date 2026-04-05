@@ -1,5 +1,3 @@
-import exceptions.ParkingLotFullException;
-import models.Vehicle;
 import models.VehicleType;
 
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ public class Floor {
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
         List<Slot> slots = new ArrayList<>();
-        int NUMBER_OF_SLOTS = 10;
         for (int j = 0; j < 3; j++) {
             slots.add(new Slot(j, floorNumber, VehicleType.BIKE));
         }
@@ -34,7 +31,7 @@ public class Floor {
         return slots;
     }
 
-    public Optional<Slot> findAvailableSlot(VehicleType type) throws ParkingLotFullException {
+    public Optional<Slot> findAvailableSlot(VehicleType type) {
         return slots.stream()
                 .filter(slot -> slot.isAvailable() && slot.isOfType(type))
                 .findFirst();

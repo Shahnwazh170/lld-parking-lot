@@ -30,4 +30,14 @@ public class Ticket {
     public LocalDateTime getEntryTime() {
         return entryTime;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "ticketId='" + ticketId + '\'' +
+                ", vehicle=" + vehicle +
+                ", slot=" + slot +
+                ", entryTime=" + entryTime +
+                '}';
+    }
 }
